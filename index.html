@@ -1,0 +1,18 @@
+<html lang="pt-BR">
+<head>
+    <script src="https://aframe.io/releases/1.7.1/aframe.min.js"></script>
+    <script src="https://rawgit.com/ngokevin/aframe-look-at-component/master/dist/aframe-look-at-component.min.js"></script>
+    <title>Projeto 01 - LoP</title>
+</head>
+
+<body>
+    <a-scene>
+        <a-box position="15 1 -5" rotation="0 0 0" color="#D3D3D3" width="2" height="2" depth="2" look-at="[camera]"></a-box>
+        <a-entity camera look-controls wads-controls="enabled:false" position="0 1 10" llo></a-entity>
+        <a-box position="-1 1.6 -5" animation="property: position; to: -1 8 -5; dur: 5000; easing: easeInOutQuad; dir:reverse; loop: false" color="tomato"></a-box>
+        <a-plane position="0 0 10" rotation="-90 0 0" width="100" height="100" material="color: blue; reflectivity: none;" static-body></a-plane>
+        <a-sky color="#2596be"></a-sky>
+    </a-scene>
+</body>
+
+</html>
