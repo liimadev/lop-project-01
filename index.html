@@ -5,61 +5,56 @@
     <script>
         AFRAME.registerComponent('mycar', {
             schema: {
-                vel: {type: 'number', default: 0.1}
+                vel: { type: "number", default: 1 },
+                rotV: { type: "number", default: 0.5 } 
             },
 
-            init: function() {
+            init: function () {
                 this.direcao = {
                     frente: false,
                     tras: false,
+                    direita: false,
                     esquerda: false,
-                    direita: false
                 }
 
-                this.onKeyDown = this.onKeyDown.bind(this)
-                this.onKeyUp = this.onKeyUp.bind(this)
+                window.addEventListener('keydown', (e) => this.onKey(e, true))
+                window.addEventListener('keyup', (e) => this.onKey(e, false))
 
-                window.addEventListener('keydown', this.onKeyDown)
-                window.addEventListener('keyup', this.onKeyUp)
-            },
-
-            onKeyDown: function (e) {
-                switch(e.key.toLowerCase()) {
-                    case 'w': this.direcao.frente = true; break
-                    case 's': this.direcao.tras = true; break
-                    case 'a': this.direcao.esquerda = true; break
-                    case 'd': this.direcao.direita = true; break
+                this.camera = document.querySelector("#camera1")
+                if(this.camera) {
+                    this.camera.setAttribute('position', '4 3 0')
+                    this.camera.setAttribute('rotation', '-15 90 0')
                 }
             },
-            onKeyUp: function (e) {
-                switch(e.key.toLowerCase()) {
-                    case 'w': this.direcao.frente = false; break
-                    case 's': this.direcao.tras = false; break
-                    case 'a': this.direcao.esquerda = false; break
-                    case 'd': this.direcao.direita = false; break
-                }
+            
+            onKey: function(e, status) {
+                if(e.key == 'w') this.direcao.frente = status
+                if(e.key == 's') this.direcao.tras = status
+                if(e.key === 'd') this.direcao.direita = status
+                if(e.key == 'a') this.direcao.esquerda = status
             },
 
             tick: function() {
-                const pos = this.el.object3D.position
-                const rot = this.el.object3D.rotation
+                const pos = this.el.object3D.position,
+                    rot = this.el.object3D.rotation,
+                    valRot = THREE.MathUtils.degToRad(this.data.rotV)
                 
-                if(this.direcao.frente) pos.x += this.data.vel
-                if(this.direcao.tras) pos.x -= this.data.vel
-                if(this.direcao.esquerda) pos.z += this.data.vel
-                if(this.direcao.direita) pos.z -= this.data.vel
+                if(this.direcao.direita) rot.y = (this.direcao.tras) ? rot.y + valRot : rot.y - valRot
+                if(this.direcao.esquerda) rot.y = (this.direcao.tras) ? rot.y - valRot : rot.y + valRot
 
-                camera.object3D.position.set(pos.x-8, pos.y+5, pos.z)
-            },
-
-            remove: function () {
-                window.removeEventListener('keydown', this.onKeyDown)
-                window.removeEventListener('keyup', this.onKeyUp)
+                if(this.direcao.frente) {
+                    pos.x -= Math.cos(rot.y) * this.data.vel
+                    pos.z += Math.sin(rot.y) * this.data.vel
+                }
+                if(this.direcao.tras) {
+                    pos.x += Math.cos(rot.y) * this.data.vel
+                    pos.z -= Math.sin(rot.y) * this.data.vel
+                }
             }
         })
     </script>
     
-    <title>Projeto 01 - LoP</title>
+    <title>Projeto 01 - LoP</title>1" lo
 </head>
 
 <body>
@@ -68,21 +63,59 @@
             <img id="grama" src="./assets/grama-02.png">
             <img id="ceu" src="./assets/sky.jpg">
             <img id="carro" src="./assets/carro.png">
+            <img id="roda" src="./assets/roda.png">
+            <img id="janela" src="./assets/gradiente-janelas.png">
         </a-assets>
 
         <!-- <a-box position="0 1 0" rotation="0 90 0" color="yellow" width="3" height="1" depth="6"></a-box>
             <a-cylinder position="2 0.5 0" rotation="0 90 90" radius="0.5" height="3.1" color="#000"></a-cylinder>
             <a-cylinder position="-2 0.5 0" rotation="0 90 90" radius="0.5" height="3.1" color="#000"></a-cylinder>
         </a-box> -->
+        <a-entity text="height: 200; value: Ola;"></a-entity>
         <a-box
-            position="0 1 0"
-            scale="4 2 2"
+            position="0 0.75 0"
+            scale="5 1 2"
             dynamic-body
             mycar
-            material="color: #FFF;
-                        src: #carro"   
-        ></a-box>
-        <a-entity id="camera" camera look-controls wads-controls="enabled:false" position="0 2 10"></a-entity>
+            material="color: red;"   
+        >
+            <a-cylinder
+                class="roda"
+                scale="0.3 1.1 0.093"
+                position="0.3 -0.48 0"
+                rotation="0 90 90"
+                material="src: #roda"1" lo
+            ></a-cylinder>
+            <a-cylinder
+                class="roda"
+                scale="0.3 1.1 0.093"
+                position="-0.3 -0.48 0"
+                rotation="0 90 90"
+                material="src: #roda"
+            ></a-cylinder>
+            <a-box
+                scale="0.6 1 1"
+                position="0.1 1 0"
+                material="color: red;"
+            >
+                <a-box scale="0.9 0.9 0.1" position="-0.46 0 0" rotation="0 90 0" material="color: #c4c4c4; src: #janela"></a-box>
+                <a-box scale="0.7 0.4 0.1" position="0.46 0 0" rotation="0 90 0" material="color: #c4c4c4; src: #janela"></a-box>
+                <a-box scale="0.9 0.9 0.1" position="0 0 0.46" rotation="0 0 0" material="color: #c4c4c4; src: #janela"></a-box>
+                <a-box scale="0.9 0.9 0.1" position="0 0 -0.46" rotation="0 0 0" material="color: #c4c4c4; src: #janela"></a-box>
+                <a-box scale="1.05 1 0.1" position="0 0 0" rotation="0 90 0" material="color: red"></a-box>
+                <a-box scale="1.05 1.05 0.1" position="0 0.46 0" rotation="90 0 0" material="color: red"></a-box>
+            </a-box>
+            <a-box
+                scale="0.9 0.3 0.01"
+                position="-0.5 0.2 0"
+                rotation="0 90 0"
+                material="color: #fff; src: #janela"
+            >
+                <a-box scale="0.2 1 1.2" position="0.4 0 0" material="color: #FFC006"></a-box>
+                <a-box scale="0.2 1 1.2" position="-0.4 0 0" material="color: #FFC006"></a-box>
+            </a-box>
+            <a-entity id="camera1" camera="fov: 100" look-controls="enabled:false" wads-controls="enabled:false" position="0 2 10"></a-entity>
+        </a-box>
         <a-entity 
             geometry="primitive: plane; width: 200; height: 200"
             position="0 0 10" 
