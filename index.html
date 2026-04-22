@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" integrity="sha384-tViUnnbYAV00FLIhhi3v/dWt3Jxw4gZQcNoSCxCIFNJVCx7/D55/wXsrNIRANwdD" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/style/cores.css">
     <title>Projeto 01 - LoP</title>
@@ -21,13 +22,30 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         background-color: #000;
+        position: relative;
+        width: 100vw;
+        height: 100vh;
     }
+    #bg-carro {
+        width: 100%;
+        height: 100%;
+        background-image: url('./assets/tela-jogo.png');
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.2;
+        filter: blur(8px);
+        position: absolute;
+        z-index: 1;
+    }
+    
 
     h1 {
         font-size: 42px;
         margin-top: 8vh;
         color: #fff;
+        text-align: center;
     }
 
     h2 {
@@ -37,6 +55,7 @@
         letter-spacing: 5px;
         margin-top: 5px;
         color: var(--primaria);
+        text-align: center;
     }
 
     .botoes {
@@ -62,14 +81,108 @@
         margin-bottom: 10px;
         width: 80%;
         text-align: center;
+        cursor: pointer;
+    }
+
+    #diagCreditos {
+        background-color: #3a3a3a;
+        outline: none;
+        border: none;
+        justify-self: center;
+        align-self: center;
+        width: 400px;
+        height: 200px;
+        border-radius: 10px;
+        border-bottom: 20px solid var(--primaria);
+    }
+    #credCabecalho {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-inline: 5px;
+        color: #fff;
+        align-items: center;
+        cursor: pointer;
+    }
+    #credCabecalho #credTitulo {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primaria);
+    }
+    #credCabecalho p:not(#credTitulo) {
+        transition: .3s;
+    }
+    #credCabecalho p:not(#credTitulo):hover {
+        color: var(--primaria);
+    }
+
+    #credMain {
+        display: flex;
+        flex-direction: column;
+        color: #fff;
+        padding: 10px 15px;
+    }
+    #credMain p:not(#github p) {
+        font-size: 18px;
+        font-weight: 600;
+        font-style: italic;
+        text-align: justify;
+    }
+
+    #credMain #github {
+        font-weight: 400;
+        font-size: 16px;
+        display: inherit;
+        flex-direction: row;
+        margin-top: 10px;
+        transition: .3s;
+        cursor: pointer;
+        text-decoration: none;
+        color: #fff;
+    }
+
+    #credMain #github i {
+        margin-right: 5px;
+    }
+    #credMain #github:hover {
+        color: var(--primaria);
     }
 </style>
 <body>
-    <h1>Projeto 01</h1>
-    <h2>Logíca de Programação</h2>
-    <div class="botoes">
-        <a href="" class="btn">Jogar</a>
-        <a href="" class="btn">Créditos</a>
-    </div>
+    <div id="bg-carro"></div>
+    <main style="width: 100%; z-index: 2;">
+        <h1>Projeto 01</h1>
+        <h2>Logíca de Programação</h2>
+        <div class="botoes">
+            <a href="jogo.html" class="btn">Jogar</a>
+            <a class="btn" id="creditos">Créditos</a>
+        </div>
+
+        <dialog id="diagCreditos">
+            <div id="credCabecalho">
+                <p id="credTitulo">Créditos</p>
+                <p id="closeModal">X</p>
+            </div>
+            <div id="credMain">
+                <p>Este jogo foi desenvolvido por <span style="color: var(--primaria);">Kellyson Lima</span>.</p>
+                <a href="https://github.com/liimadev/lop-project-01" target="_blank" id="github">
+                    <i class="bi bi-github"></i>
+                    <p>Acessar Github</p>
+                </a>
+            </div>
+        </dialog>
+    </main>
+    <script>
+        const btnCreditos = document.querySelector('#creditos'),
+            diagCreditos = document.querySelector('#diagCreditos'),
+            closeModal = document.querySelector('#closeModal')
+
+        btnCreditos.addEventListener('click', () => {
+            diagCreditos.showModal()
+        })
+        closeModal.addEventListener('click', () => {
+            diagCreditos.close()
+        })
+    </script>
 </body>
 </html>

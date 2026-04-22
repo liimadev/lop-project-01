@@ -20,12 +20,19 @@
                 }
                 this.velAtual = 0
                 this.velocimetro = document.querySelector("#velocimetro")
+                this.estadoCamera = 0
 
-                window.addEventListener('keydown', (e) => this.onKey(e, true))
+                window.addEventListener('keydown', (e) => {
+                    if(e.key.toLowerCase() == 'v') {
+                        this.mudarCamera()
+                    } else this.onKey(e, true)
+                })
                 window.addEventListener('keyup', (e) => this.onKey(e, false))
 
+
                 this.camera = document.querySelector("#camera1")
-                if(this.camera) {
+                this.cameraFixa = document.querySelector('#camera_fixa')
+                if(this.camera && this.estadoCamera == 0) {
                     this.camera.setAttribute('position', '4 3 0')
                     this.camera.setAttribute('rotation', '-15 90 0')
                 }
@@ -35,14 +42,20 @@
                 const key = e.key.toLowerCase()
                 if(key == 'w') this.direcao.frente = status
                 if(key == 's') this.direcao.tras = status
-                if(key === 'd') this.direcao.direita = status
+                if(key == 'd') this.direcao.direita = status
                 if(key == 'a') this.direcao.esquerda = status
+            },
+
+            mudarCamera: function() {
+                this.camera.setAttribute('camera', `active:${!(this.estadoCamera == 0)}`)
+                this.cameraFixa.setAttribute('camera', `active:${this.estadoCamera == 0}`)
+                this.estadoCamera = this.estadoCamera == 0 ? 1 : 0
             },
 
             tick: function() {
                 const pos = this.el.object3D.position,
                     rot = this.el.object3D.rotation,
-                    valRot = THREE.MathUtils.degToRad(this.data.rotV)
+                    valRot = THREE.MathUtils.degToRad(this.data.rotV) * 2
                 
                 if(this.direcao.frente) 
                     this.velAtual -= this.data.aceleracao
@@ -81,7 +94,7 @@
             <img id="roda" src="./assets/roda.png">
             <img id="janela" src="./assets/gradiente-janelas.png">
         </a-assets>
-        <!-- <a-entity id="camera_principal" camera position="0 5 2" wasd-controls="enabled:false" look-controls></a-entity> -->
+        <a-entity id="camera_fixa" camera="active:true" position="2 5 10" wasd-controls="enabled:false" look-controls></a-entity>
         <a-box
             position="0 0.75 0"
             scale="5 1 2"
@@ -124,7 +137,7 @@
                 <a-box scale="0.2 1 1.2" position="0.4 0 0" material="color: #FFC006"></a-box>
                 <a-box scale="0.2 1 1.2" position="-0.4 0 0" material="color: #FFC006"></a-box>
             </a-box>
-            <a-entity id="camera1" camera="fov: 90; active:false" look-controls="enabled:false" wads-controls="enabled:false" position="0 2 10">
+            <a-entity id="camera1" camera="active:true" look-controls="enabled:false" wads-controls="enabled:false" position="0 2 10">
                 <a-text
                     id="velocimetro"
                     value="0 km/h"
